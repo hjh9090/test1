@@ -12,10 +12,10 @@ public class NaverVO {
 	private String id;
 	private String email;
 	private String nickname;
-	private String mypic;
-	private String sex;
-	private String birth;
-	private int age;
+	private String profile_image;
+	private String gender;
+	private String birthday;
+	private String age;
 	
 	
 	
