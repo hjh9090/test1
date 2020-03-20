@@ -3,9 +3,10 @@
 <mapper namespace="com.sesoc.test1.dao.NaverMapper">
 
 <insert id="insertNaver" parameterType = "naver">
-insert into memberNaver 
+insert into navermember
 (
 id, email, nickname, profile_image, gender, birthday, age) 
+
 values(#{id}, #{email}, #{nickname}, #{profile_image}, #{gender}, #{birthday}, #{age})
 
 

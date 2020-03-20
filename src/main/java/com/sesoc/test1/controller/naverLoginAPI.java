@@ -4,29 +4,41 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.sesoc.test1.dao.NaverDAO;
 import com.sesoc.test1.vo.NaverVO;
 
 
 @Controller
+//@RestController
 public class naverLoginAPI {
 
 	
 	@Autowired
 	private NaverDAO dao;
+	
+	@Autowired
+     private RestTemplate restTemplate;
+	
 	
 	private static final Logger logger = LoggerFactory.getLogger(naverLoginAPI.class);
 	
@@ -41,73 +53,52 @@ public class naverLoginAPI {
 	@GetMapping("/callback")
 	public String callback (HttpSession httpsession) {
 		logger.info("콜백 하였습니다.");
-//		logger.debug(vo.toString());
 		
-
 		return "callback";
 	}
 	
 	@GetMapping("viewForm")
 	@ResponseBody
-	public String viewForm (String access_token)throws Exception {
-		System.out.println(access_token);
-        String token = access_token;// 네이버 로그인 접근 토큰; 여기에 복사한 토큰값을 넣어줍니다.
-        String header = "Bearer " + token; // Bearer 다음에 공백 추가
-        String result = null;
+	public String viewForm (String access_token, NaverVO naver)throws Exception {		
+        String header = "Bearer " + access_token; // Bearer 다음에 공백 추가
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json; charset=UTF-8");
+        headers.set("Authorization", header);
+        HttpEntity entity = new HttpEntity(headers);
+        Map<String, Object> result = restTemplate.exchange("https://openapi.naver.com/v1/nid/me", HttpMethod.GET, entity, Map.class).getBody();
+        Map<String, String> naverInfo = (LinkedHashMap<String, String>) result.get("response");
         
-        try {
-            String apiURL = "https://openapi.naver.com/v1/nid/me";
-            URL url = new URL(apiURL);
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization", header);
-            int responseCode = con.getResponseCode();
-            BufferedReader br;
-            if(responseCode==200) { // 정상 호출
-                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            } else {  // 에러 발생
-                br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-            }
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-            while ((inputLine = br.readLine()) != null) {
-                response.append(inputLine);
-            }
-            br.close();
-            result = response.toString();
-            System.out.println(response.toString());
-            JsonParser js = new JsonParser();
-            JsonElement elment = js.parse(result);
-            
-            String id = elment.getAsJsonObject().get("id").toString();
-            System.out.println(id);
-            
-//            JsonElement element = parser.parse(result);
-//            
-//            
-//            JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
-//            JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
-//            
-//            String idnum = element.getAsJsonObject().get("id").toString();
-//            String nickname = properties.getAsJsonObject().get("nickname").getAsString();
-//            String email = kakao_account.getAsJsonObject().get("email").getAsString();
-            
-            
-            
-            NaverVO naver = new NaverVO();
-            
-            naver.setId(result);
-            
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        String id = naverInfo.get("id");
+        String email = naverInfo.get("email");
+        String gender = naverInfo.get("gender");
+        String birthday = naverInfo.get("birthday");
+        String nickname = naverInfo.get("nickname");
+        String profile_image = naverInfo.get("profile_image");
+        String age = naverInfo.get("age");
+        
+        logger.debug(id);
+        logger.debug(email);
+        logger.debug(gender);
+        logger.debug(birthday);
+        logger.debug(nickname);
+        logger.debug(profile_image);
+        logger.debug(age);
+        //네이버의 회원정보는 String으로 가지고 오게 됩니다.
+        
+        naver.setId(id);
+        naver.setEmail(email);
+        naver.setGender(gender);
+        naver.setBirthday(birthday);
+        naver.setNickname(nickname);
+        naver.setProfile_image(profile_image);
+        naver.setAge(age);
+        
+        dao.insertNaver(naver);
         
         
+        return "";
         
-        
-        
-	return result;
-	}
-	
+    }
+
 	
 }
