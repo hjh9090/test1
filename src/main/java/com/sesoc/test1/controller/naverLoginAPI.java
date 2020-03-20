@@ -84,17 +84,17 @@ public class naverLoginAPI {
         logger.debug(profile_image);
         logger.debug(age);
         //네이버의 회원정보는 String으로 가지고 오게 됩니다.
-        
-        naver.setId(id);
-        naver.setEmail(email);
-        naver.setGender(gender);
-        naver.setBirthday(birthday);
-        naver.setNickname(nickname);
-        naver.setProfile_image(profile_image);
-        naver.setAge(age);
-        
-        dao.insertNaver(naver);
-        
+            naver.setId(id);
+            naver.setEmail(email);
+            naver.setGender(gender);
+            naver.setBirthday(birthday);
+            naver.setNickname(nickname);
+            naver.setProfile_image(profile_image);
+            naver.setAge(age);
+            
+            
+            
+            dao.insertNaver(naver);
         
         return "";
         

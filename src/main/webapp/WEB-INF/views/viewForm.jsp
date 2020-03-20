@@ -19,9 +19,17 @@ $(document).ready(function () {
 		data:"${sessionScope.access}",
 		success : function(res) {
 			
-			console.log(res);
-		}//access_token값 실시간으로 갱신 가능
-
+			if(res == "false") {
+				alert("중복되는 값이 있습니다.");
+				return false;
+			} else {
+				console.log(res);
+			}
+		},//access_token값 실시간으로 갱신 가능
+		error : function(e) {
+			alert(JSON.stringify(e));
+		
+		}
 	
 	});
 });
