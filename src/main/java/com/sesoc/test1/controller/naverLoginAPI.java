@@ -59,7 +59,7 @@ public class naverLoginAPI {
 	
 	@GetMapping("viewForm")
 	@ResponseBody
-	public String viewForm (String access_token, NaverVO naver)throws Exception {		
+	public String viewForm (String access_token, NaverVO naver, HttpSession httpsession)throws Exception {		
         String header = "Bearer " + access_token; // Bearer 다음에 공백 추가
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json; charset=UTF-8");
@@ -92,7 +92,8 @@ public class naverLoginAPI {
             naver.setProfile_image(profile_image);
             naver.setAge(age);
             
-            
+            httpsession.setAttribute("sessionId", id);
+            httpsession.setAttribute("sessionNickname", nickname);
             
             dao.insertNaver(naver);
         
