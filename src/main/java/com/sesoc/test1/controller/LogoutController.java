@@ -18,10 +18,10 @@ public class LogoutController {
 	@GetMapping("logout")
 	public String logOut (HttpSession httpsession) {
 		logger.info("로그아웃 페이지로 이동하였습니다.");
-			
+		//네이버, 구글로그아웃을 구현 할 경우 해당 토큰값이 만료가 되어 폐기 처리가 됩니다.
+		//폐기 되지 않게 하기 위해 httpsession에서만 값을 사라지게 만들겠습니다.
 		httpsession.invalidate();
-//			httpsession.removeAttribute("sessionId");
-			
+		
 		return "logoutForm";
 	}
 	

@@ -5,9 +5,10 @@
 <configuration>
 	<typeAliases>
 		<typeAlias type="com.sesoc.test1.vo.NaverVO" alias="naver"/>
-
+		<typeAlias type="com.sesoc.test1.vo.GoogleVO" alias="google"/>
 	</typeAliases>
 	<mappers>
 		<mapper resource="mapper/naverMapper.xml" />
+		<mapper resource="mapper/googleMapper.xml"/>
 	</mappers>
 </configuration>

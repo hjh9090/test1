@@ -51,7 +51,27 @@
 	<list> <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" /> </list> 
 	</property> </bean>
 
+	<!-- 클라이언트ID와 보안비밀 세팅 -->
+	<bean id="googleConnectionFactory" class="org.springframework.social.google.connect.GoogleConnectionFactory">
+      <constructor-arg value="1008960346250-33jebt3kge8r04ac3dh0fqoamfidshjs.apps.googleusercontent.com" />
+      <constructor-arg value="f1MZy7mODbXN11sYkQjtVZO0" />
+    </bean>
+    
+    
+    	
+	  <!-- 승인된 자바스크립트 원본과 승인된 리디렉션 URI -->
+    <bean id="googleOAuth2Parameters" class="org.springframework.social.oauth2.OAuth2Parameters">
+        <property name="scope" value="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email" />
+         <property name="redirectUri" value="http://rootmark.site/com.sesoc.test1/googleSignInCallback" />
+    </bean>
 
+	
+	
+	
+    
+    
+    
+    
 	
 	
 </beans>

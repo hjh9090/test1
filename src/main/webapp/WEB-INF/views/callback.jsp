@@ -4,6 +4,7 @@
 <%@ page import="java.io.BufferedReader" %>
 <%@ page import="java.io.InputStreamReader" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.io.InputStreamReader" %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -16,7 +17,8 @@
 <script>
 window.onload = function()
 {
-	setTimeout(function(){ SendToken(); }, 2000);
+//  	setTimeout(function(){  }, 2000);
+	SendToken();
 }
 
 function gohome() {
@@ -39,7 +41,7 @@ function SendToken()
 		success : function()
 		{
 			alert("Success!");
-			init();
+ 			init();
 		},
 		error : function(e)
 		{
@@ -96,8 +98,9 @@ String strTokenFull = "";
       if(responseCode==200) {
     	  strTokenFull = res.toString();
 //         out.println(res.toString());
-//         out.println(strTokenFull);
         
+//         out.println(strTokenFull);
+        	
         int itmp = strTokenFull.indexOf("refresh_token");
         access_token = strTokenFull.substring(17, itmp - 3);
 //         out.println("\n\n");
@@ -105,7 +108,7 @@ String strTokenFull = "";
       }
     } catch (Exception e) {
       System.out.println(e);
-    }
+    }    
   %>
   
   

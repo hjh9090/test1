@@ -2,12 +2,16 @@ package com.sesoc.test1.controller;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Iterator;
+import java.net.URLEncoder;
+import java.security.SecureRandom;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -17,11 +21,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.sesoc.test1.dao.NaverDAO;
@@ -37,29 +39,31 @@ public class naverLoginAPI {
 	private NaverDAO dao;
 	
 	@Autowired
-     private RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 	
 	
 	private static final Logger logger = LoggerFactory.getLogger(naverLoginAPI.class);
 	
 	@GetMapping("naverlogin")
-	public String naverlogin() {
+	public String naverlogin(HttpSession session) {
 		
 		//token값은 1시간마다 (3600ms) 새로 갱신 된다
+	    
 		logger.info("로그인으로 이동하였습니다.");
 		return "naverlogin";
 	}
 	
 	@GetMapping("/callback")
-	public String callback (HttpSession httpsession) {
+	public String callback (HttpSession httpsession, HttpServletRequest httpServletRequest) throws UnsupportedEncodingException {
 		logger.info("콜백 하였습니다.");
-		
 		return "callback";
 	}
 	
+	
+	
 	@GetMapping("viewForm")
 	@ResponseBody
-	public String viewForm (String access_token, NaverVO naver, HttpSession httpsession)throws Exception {		
+	public String viewForm (String access_token, NaverVO naver, HttpSession httpsession, Model model)throws Exception {		
         String header = "Bearer " + access_token; // Bearer 다음에 공백 추가
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json; charset=UTF-8");
@@ -83,6 +87,7 @@ public class naverLoginAPI {
         logger.debug(nickname);
         logger.debug(profile_image);
         logger.debug(age);
+        
         //네이버의 회원정보는 String으로 가지고 오게 됩니다.
             naver.setId(id);
             naver.setEmail(email);
@@ -91,12 +96,23 @@ public class naverLoginAPI {
             naver.setNickname(nickname);
             naver.setProfile_image(profile_image);
             naver.setAge(age);
+           
+            int result2 = dao.getNaverMember(id);
+            
+            if(result2 == 0) {
+            
+            	dao.insertNaver(naver);
+            
+            }
             
             httpsession.setAttribute("sessionId", id);
             httpsession.setAttribute("sessionNickname", nickname);
+            httpsession.setAttribute("access_token", access_token);
+            httpsession.setAttribute("sessionEmail", email);
+            logger.debug((String)httpsession.getAttribute("access_token"));
             
-            dao.insertNaver(naver);
-        
+            model.addAttribute("profile", profile_image);
+            
         return "";
         
     }

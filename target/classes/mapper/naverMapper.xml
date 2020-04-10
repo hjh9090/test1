@@ -8,10 +8,20 @@ insert into navermember
 id, email, nickname, profile_image, gender, birthday, age) 
 
 values(#{id}, #{email}, #{nickname}, #{profile_image}, #{gender}, #{birthday}, #{age})
-
-
-
-
-
 </insert>
+
+<select id="getNaverMember" parameterType = "String"  resultType = "int">
+select * from navermember
+where id = #{id}
+</select>
+
+<delete id="deleteNaver" parameterType="String">
+delete from navermember
+where id = #{id}
+</delete>
+
+
+
+
+
 </mapper>
