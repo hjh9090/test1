@@ -46,6 +46,7 @@ function SendToken()
 		error : function(e)
 		{
 			alert(JSON.stringify(e));
+			location.href = "/test1";
 		}
 	});
 }
@@ -111,10 +112,10 @@ String strTokenFull = "";
     }    
   %>
   
-  
+  <p>로그인 중입니다. 잠시만 기다려 주세요.</p>
   <input type="hidden" id="txtToken" value="<%=access_token%>">
   
-  <input type = "button" value="홈 화면으로 돌아가기" onclick="gohome()">
+<!--   <input type = "button" value="홈 화면으로 돌아가기" onclick="gohome()"> -->
   
   
 </body>

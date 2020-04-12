@@ -11,26 +11,17 @@
 <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <meta name = "google-signin-client_id"content = "1008960346250-33jebt3kge8r04ac3dh0fqoamfidshjs.apps.googleusercontent.com">
-<title>회원 탈퇴 페이지</title>
+<title>네이버 탈퇴 페이지</title>
 <script>
 $(document).ready(function () {
 	$("#delete").on("click", init);
 	
 });
 
-function signOut() {
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-      console.log('User signed out.');
-    });
-    auth2.disconnect();
-    
-}
-
 function init() {
 	
 	$.ajax({
-		url:"delete",
+		url:"delNaver",
 		type: "GET",
 		success: function() {
 				alert("회원 탈퇴가 정상적으로 이루어졌습니다.");
@@ -56,7 +47,7 @@ function init() {
 		<td>${sessionScope.sessionEmail}</td>
 	</tr>
 	<tr>
-		<td><input type = "button" id = "delete" name = "delete" value = "회원 탈퇴" onclick="signOut()"></td>
+		<td><input type = "button" id = "delete" name = "delete" value = "회원 탈퇴"></td>
 	</tr>
 </table>
 </div>

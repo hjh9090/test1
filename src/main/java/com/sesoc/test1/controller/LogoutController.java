@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.client.RestTemplate;
 
 @Controller
 public class LogoutController {
@@ -18,10 +19,22 @@ public class LogoutController {
 	@GetMapping("logout")
 	public String logOut (HttpSession httpsession) {
 		logger.info("로그아웃 페이지로 이동하였습니다.");
-		//네이버, 구글로그아웃을 구현 할 경우 해당 토큰값이 만료가 되어 폐기 처리가 됩니다.
-		//폐기 되지 않게 하기 위해 httpsession에서만 값을 사라지게 만들겠습니다.
-		httpsession.invalidate();
+		String clientId = "z_lyTyQUbIC8kv8VfFwH";
+		String clientSecret = "EdlvjsCOLs";
+		String accessToken = (String)httpsession.getAttribute("access_token");
+		String apiURL;
+		apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=delete&";
+		apiURL += "client_id=" + clientId;
+		apiURL += "&client_secret=" + clientSecret;
+		apiURL += "&access_token=" + accessToken;
+		apiURL += "&service_provider=NAVER";
 		
+		
+		RestTemplate restTemplate = new RestTemplate();
+		String result = restTemplate.getForObject(apiURL, String.class);
+		System.out.println(result);
+		
+		httpsession.invalidate();
 		return "logoutForm";
 	}
 	

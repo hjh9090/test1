@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,17 +23,26 @@ public class delMemController {
 	
 	@Autowired
 	private NaverDAO dao;
+	
+	@Autowired
 	private GoogleDAO dao2;
 	
-	@GetMapping("deletemember")
-	public String deleteMember () {
-		logger.info("회원 탈퇴 페이지로 이동하였습니다.");
-		return "deletemember";
+	@GetMapping("deleteNaver")
+	public String deleteNaver () {
+		logger.info("네이버 회원 탈퇴 페이지로 이동하였습니다.");
+		return "deleteNaver";
 	}
 	
-	@GetMapping("delete")
+	@GetMapping("deleteGoogle")
+	public String deleteGoogle () {
+		logger.info("구글 회원 탈퇴 페이지로 이동하였습니다.");
+		return "deleteGoogle";
+	}
+	
+	
+	@GetMapping("delNaver")
 	@ResponseBody
-	public String delete (HttpSession httpsession, GoogleVO google) {
+	public String delete (HttpSession httpsession) {
 		String clientId = "z_lyTyQUbIC8kv8VfFwH";
 		String clientSecret = "EdlvjsCOLs";
 		String accessToken = (String)httpsession.getAttribute("access_token");
@@ -50,15 +60,26 @@ public class delMemController {
 		String result = restTemplate.getForObject(apiURL, String.class);
 		System.out.println(result);
 		
+		httpsession.invalidate();
 		
 		return "";
 	}
 	
-//	@GetMapping
-//	public String googleDelete (String id) {
-//		logger.info("구글 회원 탈퇴로 이동");
-//		return ""
-//	}
-//	
+	@PostMapping("delGoogle")
+	public String googleDelete (HttpSession httpsession) {
+		System.out.println((String)httpsession.getAttribute("sessionId"));
+		int itmp = dao2.deleteGoogle((String)httpsession.getAttribute("sessionId"));
+		
+		if (itmp == 1)
+		{
+			httpsession.invalidate();
+			return "redirect:/";
+		}
+		else
+		{
+			return "deleteGoogle";
+		}
+	}
+	
 
 }

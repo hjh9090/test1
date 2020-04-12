@@ -111,7 +111,7 @@ public class naverLoginAPI {
             httpsession.setAttribute("sessionEmail", email);
             logger.debug((String)httpsession.getAttribute("access_token"));
             
-            model.addAttribute("profile", profile_image);
+            httpsession.setAttribute("Profile", profile_image);
             
         return "";
         

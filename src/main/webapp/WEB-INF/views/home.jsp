@@ -10,8 +10,8 @@
 
 img
 {
-	width: 150px;
-	height: 200px;
+	width: 50px;
+	height: 50px;
 }
 
 </style>
@@ -19,20 +19,9 @@ img
 
 $(document).ready(function () {
 	
-	console.log(${sessionScope.state});
-	console.log(${requestScope.profile});
-	$()
+	console.log(${requestScope.Profile});
 	
 })
-
-function naverOut() {
-	
-	
-}
-function deleteMember() {
-	
-}
-
 	
 </script>
 </head>
@@ -46,22 +35,25 @@ function deleteMember() {
 <c:if test="${sessionScope.sessionNickname != null}">
 
 <p>${sessionScope.sessionNickname}님 환영합니다.</p>
-
+	<img src='${sessionScope.Profile}'>
+	<form action="logout" method = "GET" >
+	<input type = "submit" value = "로그아웃">
+	</form>
+	<form action="deleteNaver" method = "GET">
+	<input type = "submit" value="회원탈퇴">
+	</form>
 </c:if>
 <c:if test="${sessionScope.sessionNickname == null}">
-<p>${sessionScope.sessionName}님 환영합니다.</p>
-</c:if>
-	<form action="logout" method = "GET" onsubmit="naverOut()">
+	<p>${sessionScope.sessionName}님 환영합니다.</p>
+	<img src='${sessionScope.Profile}'>
+	<form action="logout" method = "GET" >
 	<input type = "submit" value = "로그아웃">
-	<c:if test="${requestScope.profile != null}">
-	<img src="${requestScope.profile}">
-	</c:if>
 	</form>
-	<form action="deletemember" method = "GET">
+	<form action="deleteGoogle" method = "GET">
 	<input type = "submit" value = "회원 탈퇴">
 	</form>
+	</c:if>
 </c:if>
-
 
 <c:if test="${sessionScope.sessionId == null}">
 

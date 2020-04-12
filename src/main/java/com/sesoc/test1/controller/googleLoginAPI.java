@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -43,7 +44,8 @@ public class googleLoginAPI {
 	//google은 반드시 throws 처리를 해주어야 한다.(GeneralSecurityException, IOException)
 	@ResponseBody
 	@PostMapping("callbackTestGoo")
-	public String GoogleCallback(HttpServletRequest httpServletRequest, GoogleVO google, HttpSession httpsession) throws GeneralSecurityException, IOException {
+	public String GoogleCallback(HttpServletRequest httpServletRequest, GoogleVO google, HttpSession httpsession
+			, Model model) throws GeneralSecurityException, IOException {
 		
 		logger.info("콜백 페이지로 이동하였습니다.");
 		
@@ -104,6 +106,7 @@ public class googleLoginAPI {
 			 httpsession.setAttribute("sessionId", userId);
 			 httpsession.setAttribute("sessionName", name);
 			 httpsession.setAttribute("sessionEmail", email);
+			 httpsession.setAttribute("Profile", pictureUrl);
 			 
 			} else {
 			  System.out.println("Invalid ID token.");

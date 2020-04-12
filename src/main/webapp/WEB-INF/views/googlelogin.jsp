@@ -25,15 +25,13 @@ function onSignIn(googleUser) {
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xhr.onload = function() {
 			console.log(id_token);
-			console.log('Signed in as: ' + xhr.responseText);
 		};
 		xhr.send('idtoken=' + id_token);
 		
-		setTimeout(function(){ BackHome(); }, 5000);
+		setTimeout(function(){ BackHome(); }, 3000);
 	}
 function BackHome(){
-	
-	location.href = "/test1";
+	window.location.replace("/test1");	
 }
 
 
